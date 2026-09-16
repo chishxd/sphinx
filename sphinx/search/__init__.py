@@ -18,6 +18,9 @@ from docutils import nodes
 from docutils.nodes import Element
 
 from sphinx import addnodes, package_dir
+from sphinx.search.en import (
+    SearchEnglish,
+)
 from sphinx.util._pathlib import _StrPath
 from sphinx.util.index_entries import split_index_msg
 
@@ -120,9 +123,6 @@ var Stemmer = function () {
 
 
 # SearchEnglish imported after SearchLanguage is defined due to circular import
-from sphinx.search.en import (
-    SearchEnglish,
-)
 
 
 def parse_stop_word(source: str) -> set[str]:
