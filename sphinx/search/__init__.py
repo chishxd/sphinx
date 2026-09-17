@@ -87,6 +87,10 @@ var Stemmer = function () {
 };
 """
 
+    # Matches CLI flags (-x, --long-flag) or plain words.
+    # (?<!\w)-{1,2}\w[\w-]* : 1-2 leading dashes (not glued to a preceding word char,
+    #   so "a-b" doesn't count) followed by a word char, then more word/dash chars.
+    # \w+ : otherwise just match a normal word.
     _word_re = re.compile(r'(?<!\w)-{1,2}\w[\w-]*|\w+')
 
     def __init__(self, options: dict[str, str]) -> None:
@@ -120,7 +124,7 @@ var Stemmer = function () {
 
 
 # SearchEnglish imported after SearchLanguage is defined due to circular import
-from sphinx.search.en import (  # ruff: ignore[module-import-not-at-top-of-file]
+from sphinx.search.en import (  # NoQA: E402
     SearchEnglish,
 )
 
@@ -591,8 +595,7 @@ class IndexBuilder:
         # stemmer. For example, SearchChinese reuses english-stemmer.js,
         # which defines EnglishStemmer.
         stemmer_class = (
-            self.lang.js_stemmer_rawcode
-            .removesuffix('-stemmer.js')
+            self.lang.js_stemmer_rawcode.removesuffix('-stemmer.js')
             .title()
             .replace('_', '')
             .replace('-', '')

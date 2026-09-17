@@ -15,7 +15,7 @@ Bugs fixed
 
 * #14041: Fix CLI flags like ``--dry-run`` and ``-v`` being unsearchable due to
   word splitter regex and query parser behavior changes.
-  Patch by User
+  Patch by Chish
 
 
 Release 9.1.0 (released Dec 31, 2025)
