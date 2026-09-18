@@ -297,7 +297,10 @@ describe("splitQuery regression tests", () => {
 
   it("can split Chinese characters", () => {
     const result = splitQuery("Hello from 中国 上海");
-    expect(result).toEqual({ quotedTerms: [], plainTerms: ["Hello", "from", "中国", "上海"] });
+    expect(result).toEqual({
+      quotedTerms: [],
+      plainTerms: ["Hello", "from", "中国", "上海"],
+    });
   });
 
   it("can split Emoji (surrogate pair) characters. It should keep emojis.", () => {
@@ -311,68 +314,67 @@ describe("splitQuery regression tests", () => {
     expect(result).toEqual({ quotedTerms: [], plainTerms: ["Löschen", "Prüfung", "Abändern", "ærlig", "spørsmål"] });
   });
 
-
   describe("splitQuery with quoted CLI flags", () => {
-    it('should extract quoted CLI flags as quotedTerms', () => {
+    it("should extract quoted CLI flags as quotedTerms", () => {
       const result = splitQuery('"--dry-run" other words');
       expect(result).toEqual({
         quotedTerms: ["--dry-run"],
-        plainTerms: ["other", "words"]
+        plainTerms: ["other", "words"],
       });
     });
 
-    it('should handle multiple quoted terms', () => {
+    it("should handle multiple quoted terms", () => {
       const result = splitQuery('"--dry-run" and "-v" mode');
       expect(result).toEqual({
         quotedTerms: ["--dry-run", "-v"],
-        plainTerms: ["and", "mode"]
+        plainTerms: ["and", "mode"],
       });
     });
 
-    it('should return empty quotedTerms when no quotes present', () => {
+    it("should return empty quotedTerms when no quotes present", () => {
       const result = splitQuery("well-known text");
       expect(result).toEqual({
         quotedTerms: [],
-        plainTerms: ["well", "known", "text"]
+        plainTerms: ["well", "known", "text"],
       });
     });
 
-    it('should handle mixed quoted and unquoted content', () => {
+    it("should handle mixed quoted and unquoted content", () => {
       const result = splitQuery('Use "--dry-run" for testing -v flags');
       expect(result).toEqual({
         quotedTerms: ["--dry-run"],
-        plainTerms: ["Use", "for", "testing", "v", "flags"]
+        plainTerms: ["Use", "for", "testing", "v", "flags"],
       });
     });
   });
 
   describe("_parseQuery with quoted CLI flags", () => {
-    it('should not add quoted CLI flags to excludedTerms', () => {
+    it("should not add quoted CLI flags to excludedTerms", () => {
       // Test that splitQuery correctly separates quoted terms
       const result = splitQuery('"--dry-run"');
       expect(result.quotedTerms).toEqual(["--dry-run"]);
       expect(result.plainTerms).toEqual([]);
-      
+
       // Verify that quoted terms bypass the exclusion logic in _parseQuery
       // This is tested indirectly by ensuring quoted terms are handled separately from plain terms
     });
 
-    it('should handle quoted and unquoted terms correctly', () => {
+    it("should handle quoted and unquoted terms correctly", () => {
       // Test that splitQuery correctly separates quoted and unquoted terms
       const result = splitQuery('"--dry-run" -v');
       expect(result.quotedTerms).toEqual(["--dry-run"]);
       expect(result.plainTerms).toEqual(["v"]);
-      
+
       // Verify that quoted terms go to searchTerms and unquoted terms with - go to excludedTerms
       // This separation is handled in _parseQuery by processing quotedTerms and plainTerms separately
     });
 
-    it('quoted terms should be stemmed before indexing', () => {
+    it("quoted terms should be stemmed before indexing", () => {
       // Test that quoted terms are processed correctly by splitQuery
       const result = splitQuery('"--running"');
       expect(result.quotedTerms).toEqual(["--running"]);
       expect(result.plainTerms).toEqual([]);
-      
+
       // The actual stemming happens in _parseQuery, but splitQuery correctly extracts the quoted terms
     });
   });
